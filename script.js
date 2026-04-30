@@ -259,6 +259,39 @@ const faqs = [
     }
 ];
 
+document.getElementById("clientForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const formData = {
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value,
+    message: document.getElementById("message").value
+  };
+
+  // Remplace "TON_URL_WEBHOOK" par l'URL de ton webhook Make/Integromat
+  fetch("https://hook.eu1.make.com/gw3fsasdcxeq77c1qw9dnmpxl7v2a37f", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Erreur lors de l'envoi des données.");
+    }
+    return response.json();
+  })
+  .then(data => {
+    alert("Merci ! Vos données ont été envoyées avec succès.");
+    document.getElementById("clientForm").reset();
+  })
+  .catch(error => {
+    console.error("Erreur :", error);
+    alert("Une erreur est survenue. Veuillez réessayer.");
+  });
+});
+
 function renderFAQ() {
     const container = document.getElementById('faq-container');
     container.innerHTML = '';

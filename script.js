@@ -259,38 +259,32 @@ const faqs = [
     }
 ];
 
-document.getElementById("clientForm").addEventListener("submit", function(event) {
-  event.preventDefault();
+  document.getElementById("contactForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
 
-  const formData = {
-    name: document.getElementById("name").value,
-    email: document.getElementById("email").value,
-    message: document.getElementById("message").value
-  };
+    const data = {
+      fields: {
+        "Nom": document.getElementById("nom").value,
+        "Email": document.getElementById("email").value,
+        "Message": document.getElementById("message").value,
+        "Statut": "Nouveau"
+      }
+    };
 
-  // Remplace "TON_URL_WEBHOOK" par l'URL de ton webhook Make/Integromat
-  fetch("https://hook.eu1.make.com/gw3fsasdcxeq77c1qw9dnmpxl7v2a37f", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error("Erreur lors de l'envoi des données.");
+    const response = await fetch("https://api.airtable.com/v0/TON_BASE_ID/TON_NOM_TABLE", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer TON_TOKEN_AIRTABLE",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      alert("Merci ! Vous allez recevoir un email de confirmation.");
     }
-    return response.json();
-  })
-  .then(data => {
-    alert("Merci ! Vos données ont été envoyées avec succès.");
-    document.getElementById("clientForm").reset();
-  })
-  .catch(error => {
-    console.error("Erreur :", error);
-    alert("Une erreur est survenue. Veuillez réessayer.");
   });
-});
+
 
 function renderFAQ() {
     const container = document.getElementById('faq-container');

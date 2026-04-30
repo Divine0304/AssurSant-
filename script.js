@@ -259,29 +259,28 @@ const faqs = [
     }
 ];
 
-  document.getElementById("contactForm").addEventListener("submit", async function(e) {
+  document.getElementById('contactForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const data = {
-      fields: {
-        "Nom": document.getElementById("nom").value,
-        "Email": document.getElementById("email").value,
-        "Message": document.getElementById("message").value,
-        "Statut": "Nouveau"
-      }
+      nom: document.getElementById('nom').value,
+      email: document.getElementById('email').value,
+      message: document.getElementById('message').value
     };
 
-    const response = await fetch("https://api.airtable.com/v0/TON_BASE_ID/TON_NOM_TABLE", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer TON_TOKEN_AIRTABLE",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
+    try {
+      const response = await fetch('https://hook.eu1.make.com/q4rs6s6z5iq5ly2x2frryjoq7j6039o7', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
 
-    if (response.ok) {
-      alert("Merci ! Vous allez recevoir un email de confirmation.");
+      if (response.ok) {
+        alert('Message envoyé ! Vérifiez votre boîte mail.');
+        this.reset();
+      }
+    } catch (error) {
+      alert('Erreur lors de l\'envoi. Réessayez.');
     }
   });
 
@@ -305,6 +304,7 @@ function renderFAQ() {
                 ${faq.answer}
             </div>
         `;
+    
 
         const trigger = itemEl.querySelector('.accordion-trigger');
         const content = itemEl.querySelector('.accordion-content');

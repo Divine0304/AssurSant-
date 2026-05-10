@@ -1,352 +1,312 @@
-// ============================================
-// HEADER SCROLL EFFECT
-// ============================================
-const header = document.getElementById('header');
-let lastScrollY = 0;
+// ═══════════════════════════════════════════
+// WEBHOOK URL — Make
+// ═══════════════════════════════════════════
+const WEBHOOK_URL = 'https://hook.eu1.make.com/q4rs6s6z5iq5ly2x2frryjoq7j6039o7';
 
+// ═══════════════════════════════════════════
+// HEADER SCROLL
+// ═══════════════════════════════════════════
+const header = document.getElementById('header');
 window.addEventListener('scroll', () => {
-    lastScrollY = window.scrollY;
-    if (lastScrollY > 20) {
-        header.classList.add('scrolled');
-    } else {
-        header.classList.remove('scrolled');
-    }
+  header.classList.toggle('scrolled', window.scrollY > 20);
 }, { passive: true });
 
-// ============================================
-// MOBILE MENU TOGGLE
-// ============================================
-const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-const mobileMenu = document.getElementById('mobile-menu');
+// ═══════════════════════════════════════════
+// MOBILE BURGER MENU
+// ═══════════════════════════════════════════
+const burger = document.getElementById('burger');
+const mobileNav = document.getElementById('mobileNav');
 
-mobileMenuBtn.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
+burger.addEventListener('click', () => {
+  mobileNav.classList.toggle('open');
 });
 
-// Close mobile menu when a link is clicked
-const mobileLinks = mobileMenu.querySelectorAll('a');
-mobileLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-    });
+mobileNav.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => mobileNav.classList.remove('open'));
 });
 
-// ============================================
-// SMOOTH SCROLL FOR NAVIGATION
-// ============================================
+// ═══════════════════════════════════════════
+// SMOOTH SCROLL
+// ═══════════════════════════════════════════
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        const href = this.getAttribute('href');
-        if (href !== '#' && document.querySelector(href)) {
-            e.preventDefault();
-            const target = document.querySelector(href);
-            target.scrollIntoView({ behavior: 'smooth' });
-        }
-    });
+  anchor.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    if (href !== '#' && document.querySelector(href)) {
+      e.preventDefault();
+      const target = document.querySelector(href);
+      const offset = 80;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
 });
 
-// ============================================
-// INTERSECTION OBSERVER FOR ANIMATIONS
-// ============================================
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
+// ═══════════════════════════════════════════
+// REVEAL ON SCROLL (IntersectionObserver)
+// ═══════════════════════════════════════════
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in-up');
-            observer.unobserve(entry.target);
-        }
-    });
-}, observerOptions);
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-// Observe all reveal elements
-document.querySelectorAll('.reveal').forEach(el => {
-    observer.observe(el);
-});
-
-// ============================================
+// ═══════════════════════════════════════════
 // PERSONAS TABS
-// ============================================
-const personaTabs = document.querySelectorAll('.persona-tab');
-const personaContents = document.querySelectorAll('.persona-content');
+// ═══════════════════════════════════════════
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('.persona-panel');
 
-// Set initial active tab
-personaTabs[0].setAttribute('data-active', 'true');
-const initialPersona = personaTabs[0].getAttribute('data-persona');
-document.querySelector(`.persona-content[data-persona="${initialPersona}"]`).classList.remove('hidden');
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
 
-personaTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        const persona = tab.getAttribute('data-persona');
+    tabBtns.forEach(b => b.classList.remove('active'));
+    tabPanels.forEach(p => p.classList.remove('active'));
 
-        // Remove active state from all tabs
-        personaTabs.forEach(t => t.removeAttribute('data-active'));
-        personaContents.forEach(c => c.classList.add('hidden'));
-
-        // Add active state to clicked tab
-        tab.setAttribute('data-active', 'true');
-        document.querySelector(`.persona-content[data-persona="${persona}"]`).classList.remove('hidden');
-    });
+    btn.classList.add('active');
+    document.getElementById(`tab-${target}`).classList.add('active');
+  });
 });
 
-// ============================================
-// CHECKLIST FUNCTIONALITY
-// ============================================
-const checklistItems = [
-    { id: 1, title: "Prise de rendez-vous chez le médecin généraliste", description: "Planifiez votre consultation annuelle ou selon vos besoins" },
-    { id: 2, title: "Vérification des ordonnances expirées", description: "Vérifiez la date d'expiration de vos ordonnances" },
-    { id: 3, title: "Mise à jour des coordonnées de contact", description: "Médecin, assurance, pharmacie, etc." },
-    { id: 4, title: "Vérification des remboursements en attente", description: "Sécurité Sociale, mutuelle et autres organismes" },
-    { id: 5, title: "Bilan des dépenses de santé du mois", description: "Pharmacie, consultations, examens médicaux, etc." },
-    { id: 6, title: "Prise régulière des médicaments prescrits", description: "Respectez votre traitement selon les prescriptions" },
-    { id: 7, title: "Vérification de la couverture complémentaire", description: "Mutuelle, garanties et couvertures additionnelles" },
-    { id: 8, title: "Mise à jour du carnet de santé ou DMP", description: "Dossier Médical Partagé avec vos informations récentes" },
-    { id: 9, title: "Planification des examens de santé recommandés", description: "Bilan sanguin, dépistages, vaccins, etc." },
-    { id: 10, title: "Vérification des stocks de médicaments", description: "Médicaments et matériel médical à domicile" }
+// ═══════════════════════════════════════════
+// CHECKLIST
+// ═══════════════════════════════════════════
+const checklistData = [
+  { id: 1, title: 'Prise de rendez-vous chez le médecin généraliste', desc: 'Planifiez votre consultation annuelle ou selon vos besoins' },
+  { id: 2, title: 'Vérification des ordonnances expirées', desc: 'Vérifiez la date d\'expiration de vos ordonnances' },
+  { id: 3, title: 'Mise à jour des coordonnées de contact', desc: 'Médecin, assurance, pharmacie, etc.' },
+  { id: 4, title: 'Vérification des remboursements en attente', desc: 'Sécurité Sociale, mutuelle et autres organismes' },
+  { id: 5, title: 'Bilan des dépenses de santé du mois', desc: 'Pharmacie, consultations, examens médicaux, etc.' },
+  { id: 6, title: 'Prise régulière des médicaments prescrits', desc: 'Respectez votre traitement selon les prescriptions' },
+  { id: 7, title: 'Vérification de la couverture complémentaire', desc: 'Mutuelle, garanties et couvertures additionnelles' },
+  { id: 8, title: 'Mise à jour du carnet de santé ou DMP', desc: 'Dossier Médical Partagé avec vos informations récentes' },
+  { id: 9, title: 'Planification des examens de santé recommandés', desc: 'Bilan sanguin, dépistages, vaccins, etc.' },
+  { id: 10, title: 'Vérification des stocks de médicaments', desc: 'Médicaments et matériel médical à domicile' }
 ];
 
-const checkedItems = new Set();
+const checkedSet = new Set();
 
 function renderChecklist() {
-    const container = document.getElementById('checklist-container');
-    container.innerHTML = '';
+  const container = document.getElementById('checklist-container');
+  container.innerHTML = '';
 
-    checklistItems.forEach((item, index) => {
-        const isChecked = checkedItems.has(item.id);
-        const itemEl = document.createElement('div');
-        itemEl.className = `reveal opacity-0 bg-white rounded-2xl shadow-soft border border-slate-100 transition-all duration-200 cursor-pointer hover:shadow-md ${
-            isChecked ? 'border-l-4 border-l-blue-700 bg-blue-50' : ''
-        }`;
-        itemEl.style.animationDelay = `${index * 50}ms`;
+  checklistData.forEach((item, i) => {
+    const isChecked = checkedSet.has(item.id);
+    const el = document.createElement('div');
+    el.className = `check-item${isChecked ? ' checked' : ''}`;
+    el.style.transitionDelay = `${i * 40}ms`;
 
-        itemEl.innerHTML = `
-            <div class="p-6 lg:p-8">
-                <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0 pt-1">
-                        <input
-                            type="checkbox"
-                            ${isChecked ? 'checked' : ''}
-                            class="w-6 h-6 text-blue-700 rounded cursor-pointer"
-                            data-item-id="${item.id}"
-                        />
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="font-semibold text-base transition-colors ${
-                            isChecked ? 'text-slate-500 line-through' : 'text-slate-900'
-                        }">
-                            ${item.id}. ${item.title}
-                        </h3>
-                        <p class="text-sm text-slate-600 mt-1">
-                            ${item.description}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        `;
+    el.innerHTML = `
+      <div class="check-box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+          <path d="M20 6L9 17l-5-5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="check-body">
+        <p class="check-title">${item.title}</p>
+        <p class="check-desc">${item.desc}</p>
+      </div>
+      <span class="check-num">${String(item.id).padStart(2, '0')}</span>
+    `;
 
-        const checkbox = itemEl.querySelector('input[type="checkbox"]');
-        checkbox.addEventListener('change', () => {
-            toggleChecklistItem(item.id);
-        });
-
-        itemEl.addEventListener('click', () => {
-            checkbox.checked = !checkbox.checked;
-            toggleChecklistItem(item.id);
-        });
-
-        container.appendChild(itemEl);
-
-        // Observe for animation
-        observer.observe(itemEl);
+    el.addEventListener('click', () => {
+      if (checkedSet.has(item.id)) {
+        checkedSet.delete(item.id);
+      } else {
+        checkedSet.add(item.id);
+      }
+      renderChecklist();
     });
 
-    updateProgress();
-}
+    container.appendChild(el);
 
-function toggleChecklistItem(id) {
-    if (checkedItems.has(id)) {
-        checkedItems.delete(id);
-    } else {
-        checkedItems.add(id);
-    }
-    renderChecklist();
+    // trigger reveal with slight delay
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => el.classList.add('visible'));
+    });
+  });
+
+  updateProgress();
 }
 
 function updateProgress() {
-    const checkedCount = checkedItems.size;
-    const totalCount = checklistItems.length;
-    const progressPercent = Math.round((checkedCount / totalCount) * 100);
-
-    document.getElementById('progress-text').textContent = `${checkedCount} sur ${totalCount} tâches complétées`;
-    document.getElementById('progress-percent').textContent = `${progressPercent}%`;
-    document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+  const count = checkedSet.size;
+  const total = checklistData.length;
+  const pct = Math.round((count / total) * 100);
+  document.getElementById('progress-text').textContent = `${count} sur ${total} tâches complétées`;
+  document.getElementById('progress-percent').textContent = `${pct}%`;
+  document.getElementById('progress-bar').style.width = `${pct}%`;
 }
 
 // Download checklist
 document.getElementById('download-btn').addEventListener('click', () => {
-    const checkedCount = checkedItems.size;
-    const totalCount = checklistItems.length;
-    const progressPercent = Math.round((checkedCount / totalCount) * 100);
+  const lines = [
+    'CHECKLIST SANTÉ MENSUELLE — AssurSanté Connect',
+    `Date : ${new Date().toLocaleDateString('fr-FR')}`,
+    `Progression : ${checkedSet.size}/${checklistData.length} (${Math.round((checkedSet.size/checklistData.length)*100)}%)`,
+    '',
+    'TÂCHES :',
+    ...checklistData.map(item => `${checkedSet.has(item.id) ? '✓' : '☐'}  ${item.id}. ${item.title}`)
+  ];
 
-    const csvContent = [
-        "Checklist Santé Mensuelle",
-        `Date: ${new Date().toLocaleDateString("fr-FR")}`,
-        `Progression: ${checkedCount}/${totalCount} (${progressPercent}%)`,
-        "",
-        "Tâches:",
-        ...checklistItems.map(item => {
-            const isChecked = checkedItems.has(item.id);
-            return `${isChecked ? "✓" : "☐"} ${item.id}. ${item.title}`;
-        })
-    ].join("\n");
-
-    const element = document.createElement("a");
-    element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(csvContent));
-    element.setAttribute("download", `checklist-sante-${new Date().toISOString().split('T')[0]}.txt`);
-    element.style.display = "none";
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+  const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `checklist-sante-${new Date().toISOString().split('T')[0]}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
 });
 
-// Reset checklist
+// Reset
 document.getElementById('reset-btn').addEventListener('click', () => {
-    checkedItems.clear();
-    renderChecklist();
+  checkedSet.clear();
+  renderChecklist();
 });
 
-// Initial render
 renderChecklist();
 
-// ============================================
-// FAQ ACCORDION
-// ============================================
-const faqs = [
-    {
-        question: 'Comment créer mon compte AssurSanté Connect ?',
-        answer: 'La création de compte est simple et rapide. Cliquez sur "Créer un compte", renseignez votre numéro de sécurité sociale, votre email et créez un mot de passe sécurisé. Vous recevrez un code de validation par SMS pour confirmer votre identité.'
-    },
-    {
-        question: 'Mes données personnelles sont-elles sécurisées ?',
-        answer: 'Absolument. AssurSanté Connect utilise un chiffrement de niveau bancaire (AES-256) pour protéger vos données. Nous sommes conformes au RGPD et vos informations ne sont jamais partagées avec des tiers sans votre consentement explicite.'
-    },
-    {
-        question: 'Puis-je gérer le compte de mes enfants ou de mes proches ?',
-        answer: 'Oui, avec la fonction "Gestion familiale", vous pouvez ajouter vos ayants droit (enfants, conjoint, personnes à charge) et gérer leurs démarches depuis votre compte principal, tout en respectant les droits de chacun.'
-    },
-    {
-        question: 'Comment fonctionne l\'assistant virtuel ?',
-        answer: 'Notre assistant virtuel utilise l\'intelligence artificielle pour comprendre vos questions et vous orienter vers la bonne information ou démarche. Il est disponible 24h/24, 7j/7 et peut vous accompagner pas à pas dans vos démarches.'
-    },
-    {
-        question: 'Quels documents puis-je télécharger sur AssurSanté Connect ?',
-        answer: 'Vous pouvez télécharger toutes vos attestations : attestation de droits, carte mutuelle, relevés de remboursements, attestations fiscales, et bien plus encore. Tous les documents sont disponibles au format PDF et signés électroniquement.'
-    },
-    {
-        question: 'Que faire si je rencontre un problème technique ?',
-        answer: 'Notre équipe de support est disponible par chat, email ou téléphone. Vous pouvez également consulter notre centre d\'aide qui contient des guides détaillés pour résoudre la plupart des problèmes courants.'
-    },
-    {
-        question: 'Le service est-il vraiment gratuit ?',
-        answer: 'Oui, AssurSanté Connect est un service public entièrement gratuit pour tous les assurés sociaux. Il n\'y a aucun frais caché, aucun abonnement, et toutes les fonctionnalités sont accessibles sans limitation.'
-    },
-    {
-        question: 'Puis-je utiliser AssurSanté Connect sur mon téléphone ?',
-        answer: 'Oui, notre plateforme est entièrement responsive et fonctionne parfaitement sur smartphone, tablette et ordinateur. Nous proposons également une application mobile dédiée pour iOS et Android avec des fonctionnalités optimisées pour mobile.'
+// ═══════════════════════════════════════════
+// CONTACT FORM — Make Webhook
+// ═══════════════════════════════════════════
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const nom     = document.getElementById('nom').value.trim();
+  const email   = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  const btnText    = document.getElementById('btn-text');
+  const btnLoading = document.getElementById('btn-loading');
+  const submitBtn  = document.getElementById('submitBtn');
+  const successEl  = document.getElementById('form-success');
+  const errorEl    = document.getElementById('form-error');
+
+  // reset
+  successEl.style.display = 'none';
+  errorEl.style.display = 'none';
+
+  // loading state
+  btnText.style.display = 'none';
+  btnLoading.style.display = 'flex';
+  submitBtn.disabled = true;
+
+  const payload = { nom, email, message };
+
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      successEl.style.display = 'block';
+      this.reset();
+    } else {
+      throw new Error('Server error');
     }
+  } catch (err) {
+    errorEl.style.display = 'block';
+  } finally {
+    btnText.style.display = 'flex';
+    btnLoading.style.display = 'none';
+    submitBtn.disabled = false;
+  }
+});
+
+// ═══════════════════════════════════════════
+// FAQ ACCORDION
+// ═══════════════════════════════════════════
+const faqData = [
+  {
+    q: 'Comment créer mon compte AssurSanté Connect ?',
+    a: 'La création de compte est simple et rapide. Cliquez sur "Mon espace", renseignez votre numéro de sécurité sociale, votre email et créez un mot de passe sécurisé. Vous recevrez un code de validation par SMS pour confirmer votre identité.'
+  },
+  {
+    q: 'Mes données personnelles sont-elles sécurisées ?',
+    a: 'Absolument. AssurSanté Connect utilise un chiffrement de niveau bancaire (AES-256) pour protéger vos données. Nous sommes conformes au RGPD et vos informations ne sont jamais partagées avec des tiers sans votre consentement explicite.'
+  },
+  {
+    q: 'Puis-je gérer le compte de mes enfants ou de mes proches ?',
+    a: 'Oui, avec la fonction "Gestion familiale", vous pouvez ajouter vos ayants droit (enfants, conjoint, personnes à charge) et gérer leurs démarches depuis votre compte principal, tout en respectant les droits de chacun.'
+  },
+  {
+    q: 'Comment fonctionne l\'assistant virtuel ?',
+    a: 'Notre assistant virtuel utilise l\'intelligence artificielle pour comprendre vos questions et vous orienter vers la bonne information ou démarche. Il est disponible 24h/24, 7j/7 et peut vous accompagner pas à pas dans vos démarches.'
+  },
+  {
+    q: 'Quels documents puis-je télécharger ?',
+    a: 'Vous pouvez télécharger toutes vos attestations : attestation de droits, carte mutuelle, relevés de remboursements, attestations fiscales, et bien plus encore. Tous les documents sont disponibles au format PDF signé électroniquement.'
+  },
+  {
+    q: 'Le service est-il vraiment gratuit ?',
+    a: 'Oui, AssurSanté Connect est un service public entièrement gratuit pour tous les assurés sociaux. Il n\'y a aucun frais caché, aucun abonnement, et toutes les fonctionnalités sont accessibles sans limitation.'
+  }
 ];
 
-  document.getElementById('contactForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const data = {
-      nom: document.getElementById('nom').value,
-      email: document.getElementById('email').value,
-      message: document.getElementById('message').value
-    };
-
-    try {
-      const response = await fetch('https://hook.eu1.make.com/q4rs6s6z5iq5ly2x2frryjoq7j6039o7', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-
-      if (response.ok) {
-        alert('Message envoyé ! Vérifiez votre boîte mail.');
-        this.reset();
-      }
-    } catch (error) {
-      alert('Erreur lors de l\'envoi. Réessayez.');
-    }
-  });
-
-
 function renderFAQ() {
-    const container = document.getElementById('faq-container');
-    container.innerHTML = '';
+  const container = document.getElementById('faq-container');
+  container.innerHTML = '';
 
-    faqs.forEach((faq, index) => {
-        const itemEl = document.createElement('div');
-        itemEl.className = 'accordion-item reveal opacity-0';
-        itemEl.style.animationDelay = `${index * 50}ms`;
-        itemEl.setAttribute('data-state', 'closed');
+  faqData.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'faq-item reveal';
+    el.style.transitionDelay = `${i * 60}ms`;
 
-        itemEl.innerHTML = `
-            <button class="accordion-trigger w-full">
-                ${faq.question}
-                <span class="float-right">▼</span>
-            </button>
-            <div class="accordion-content" data-state="closed">
-                ${faq.answer}
-            </div>
-        `;
-    
+    el.innerHTML = `
+      <button class="faq-trigger">
+        <span>${item.q}</span>
+        <div class="faq-chevron">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+      <div class="faq-body">
+        <p>${item.a}</p>
+      </div>
+    `;
 
-        const trigger = itemEl.querySelector('.accordion-trigger');
-        const content = itemEl.querySelector('.accordion-content');
-
-        trigger.addEventListener('click', () => {
-            const isOpen = itemEl.getAttribute('data-state') === 'open';
-
-            // Close all other items
-            document.querySelectorAll('.accordion-item').forEach(item => {
-                if (item !== itemEl) {
-                    item.setAttribute('data-state', 'closed');
-                    item.querySelector('.accordion-content').setAttribute('data-state', 'closed');
-                }
-            });
-
-            // Toggle current item
-            if (isOpen) {
-                itemEl.setAttribute('data-state', 'closed');
-                content.setAttribute('data-state', 'closed');
-            } else {
-                itemEl.setAttribute('data-state', 'open');
-                content.setAttribute('data-state', 'open');
-            }
-        });
-
-        container.appendChild(itemEl);
-
-        // Observe for animation
-        observer.observe(itemEl);
+    el.querySelector('.faq-trigger').addEventListener('click', () => {
+      const isOpen = el.classList.contains('open');
+      // close all
+      document.querySelectorAll('.faq-item.open').forEach(f => f.classList.remove('open'));
+      if (!isOpen) el.classList.add('open');
     });
+
+    container.appendChild(el);
+    revealObserver.observe(el);
+  });
 }
 
 renderFAQ();
 
-// ============================================
-// INITIAL ANIMATIONS
-// ============================================
-document.addEventListener('DOMContentLoaded', () => {
-    // Trigger animations for elements already in view
-    document.querySelectorAll('.reveal').forEach(el => {
-        if (el.getBoundingClientRect().top < window.innerHeight) {
-            el.classList.add('animate-fade-in-up');
-        }
-    });
-});
+// ═══════════════════════════════════════════
+// ACTIVE NAV LINK ON SCROLL
+// ═══════════════════════════════════════════
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.desktop-nav a');
+
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => {
+        link.style.color = '';
+        link.style.background = '';
+      });
+      const activeLink = document.querySelector(`.desktop-nav a[href="#${entry.target.id}"]`);
+      if (activeLink) {
+        activeLink.style.color = 'var(--blue-700)';
+        activeLink.style.background = 'var(--blue-50)';
+      }
+    }
+  });
+}, { threshold: 0.4 });
+
+sections.forEach(s => navObserver.observe(s));

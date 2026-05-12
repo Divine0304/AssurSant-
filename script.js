@@ -177,53 +177,52 @@ document.addEventListener('keydown', (e) => {
 // ═══════════════════════════════════════════
 document.getElementById('email-form').addEventListener('submit', async function(e) {
   e.preventDefault();
+  console.log("Formulaire soumis..."); // Log de test
 
-  // On récupère les 3 champs séparément
+  // 1. Récupération des éléments
+  const formContainer = document.getElementById('modal-form-container');
+  const successMessage = document.getElementById('modal-success');
+  const errorMessage = document.getElementById('modal-error');
+  const submitBtn = document.getElementById('modal-submit-btn');
+  const btnText = document.getElementById('modal-btn-text');
+  const btnLoading = document.getElementById('modal-btn-loading');
+
+  // 2. Récupération des valeurs
   const prenom = document.getElementById('modal-prenom').value.trim();
-  const nom    = document.getElementById('modal-nom').value.trim();
-  const email  = document.getElementById('modal-email').value.trim();
+  const nom = document.getElementById('modal-nom').value.trim();
+  const email = document.getElementById('modal-email').value.trim();
 
   if (!prenom || !nom || !email) return;
 
-  const btnText    = document.getElementById('modal-btn-text');
-  const btnLoading = document.getElementById('modal-btn-loading');
-  const submitBtn  = document.getElementById('modal-submit-btn');
-
-  btnText.style.display    = 'none';
-  btnLoading.style.display = 'flex';
-  submitBtn.disabled       = true;
-
-  // Création du paquet de données (payload) pour Make
-  const payload = {
-    prenom: prenom,
-    nom: nom,
-    email: email,
-    date: new Date().toLocaleDateString('fr-FR')
-  };
+  // 3. État visuel "Envoi en cours"
+  formContainer.style.display = 'none';
+  successMessage.style.display = 'block';
 
   try {
     const response = await fetch(WEBHOOK_URL, {
-      method:  'POST',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload)
+      body: JSON.stringify({ prenom, nom, email, date: new Date().toLocaleDateString('fr-FR') })
     });
 
+    console.log("Réponse reçue :", response.status); // Log de test
+
     if (response.ok) {
-      document.getElementById('modal-success').style.display = 'block';
-      this.reset();
-      setTimeout(closeModal, 3000);
+      // Masquer le formulaire et afficher le succès
+      formContainer.style.display = 'none';
+      successMessage.style.setProperty('display', 'block', 'important'); 
+      console.log("Succès affiché !");
     } else {
-      throw new Error('Erreur');
+      throw new Error('Erreur Webhook');
     }
   } catch (err) {
-    document.getElementById('modal-error').style.display = 'block';
-  } finally {
-    btnText.style.display    = 'flex';
+    console.error("Erreur attrapée :", err);
+    errorMessage.style.display = 'block';
+    btnText.style.display = 'flex';
     btnLoading.style.display = 'none';
-    submitBtn.disabled       = false;
+    submitBtn.disabled = false;
   }
 });
-
 // ═══════════════════════════════════════════
 // FORMULAIRE DE CONTACT (simulation locale)
 // ═══════════════════════════════════════════

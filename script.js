@@ -207,6 +207,13 @@ document.getElementById('email-form').addEventListener('submit', async function(
 
     console.log("Réponse reçue :", response.status); // Log de test
 
+    const payload = {
+    prenom: prenom,
+    nom: nom,
+    email: email,
+    date: new Date().toLocaleDateString('fr-FR')
+  };
+
     if (response.ok) {
       // Masquer le formulaire et afficher le succès
       formContainer.style.display = 'none';

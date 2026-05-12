@@ -178,35 +178,34 @@ document.addEventListener('keydown', (e) => {
 document.getElementById('email-form').addEventListener('submit', async function(e) {
   e.preventDefault();
 
-  // Récupération des valeurs
-  const nom = document.getElementById('modal-nom').value.trim();
+  // On récupère les 3 champs séparément
   const prenom = document.getElementById('modal-prenom').value.trim();
-  const email = document.getElementById('modal-email').value.trim();
+  const nom    = document.getElementById('modal-nom').value.trim();
+  const email  = document.getElementById('modal-email').value.trim();
 
-  if (!nom || !prenom || !email) return;
+  if (!prenom || !nom || !email) return;
 
-  const btnText = document.getElementById('modal-btn-text');
+  const btnText    = document.getElementById('modal-btn-text');
   const btnLoading = document.getElementById('modal-btn-loading');
-  const submitBtn = document.getElementById('modal-submit-btn');
+  const submitBtn  = document.getElementById('modal-submit-btn');
 
-  // État de chargement
-  btnText.style.display = 'none';
+  btnText.style.display    = 'none';
   btnLoading.style.display = 'flex';
-  submitBtn.disabled = true;
+  submitBtn.disabled       = true;
 
-  // Création du payload avec uniquement nom, prénom et email
+  // Création du paquet de données (payload) pour Make
   const payload = {
-    nom: nom,
     prenom: prenom,
+    nom: nom,
     email: email,
     date: new Date().toLocaleDateString('fr-FR')
   };
 
   try {
     const response = await fetch(WEBHOOK_URL, {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body:    JSON.stringify(payload)
     });
 
     if (response.ok) {
@@ -219,9 +218,9 @@ document.getElementById('email-form').addEventListener('submit', async function(
   } catch (err) {
     document.getElementById('modal-error').style.display = 'block';
   } finally {
-    btnText.style.display = 'flex';
+    btnText.style.display    = 'flex';
     btnLoading.style.display = 'none';
-    submitBtn.disabled = false;
+    submitBtn.disabled       = false;
   }
 });
 

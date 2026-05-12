@@ -442,109 +442,43 @@
          CONTACT / FORMULAIRE MAKE WEBHOOK
     ═══════════════════════════════════════════ -->
     <section id="contact" class="section section-alt">
-      <div class="container">
-        <div class="contact-grid">
-          <div class="contact-left reveal">
-            <div class="section-tag">Nous contacter</div>
-            <h2>Une question ?<br><em>Écrivez-nous.</em></h2>
-            <p>Notre équipe répond dans les 24h. Vous recevrez une confirmation automatique par email dès l'envoi de votre message.</p>
+  <div class="container">
+    <div class="contact-single-column reveal">
+      <div class="section-tag">Nous contacter</div>
+      <h2>Une question ?<br><em>Écrivez-nous.</em></h2>
+      <p>Notre équipe répond dans les 24h. Vous recevrez une confirmation automatique par email dès l'envoi de votre message.</p>
 
-            <div class="contact-infos">
-              <div class="contact-info-item">
-                <div class="ci-icon">📧</div>
-                <div>
-                  <strong>Email</strong>
-                  <span>contact@assursante-connect.fr</span>
-                </div>
-              </div>
-              <div class="contact-info-item">
-                <div class="ci-icon">📞</div>
-                <div>
-                  <strong>Téléphone</strong>
-                  <span>36 46 (service gratuit)</span>
-                </div>
-              </div>
-              <div class="contact-info-item">
-                <div class="ci-icon">🕐</div>
-                <div>
-                  <strong>Horaires</strong>
-                  <span>Lun–Ven, 8h–18h</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="contact-secure">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="currentColor"/></svg>
-              Vos données sont chiffrées et protégées — conformité RGPD
-            </div>
+      <div class="contact-infos">
+        <div class="contact-info-item">
+          <div class="ci-icon">📧</div>
+          <div>
+            <strong>Email</strong>
+            <span>contact@assursante-connect.fr</span>
           </div>
-
-          <div class="contact-right reveal reveal-delay-1">
-            <div class="form-card">
-              <form id="email-form" novalidate>
-                <div class="form-group">
-                  <label for="modal-nom">Votre nom</label>
-                  <input type="text" id="modal-nom" name="nom" placeholder="Ex : Dupont" required />
-                </div>
-                
-                <div class="form-group">
-                  <label for="modal-prenom">Votre prénom</label>
-                  <input type="text" id="modal-prenom" name="prenom" placeholder="Ex : Marie" required />
-                </div>
-
-                <div class="form-group">
-                  <label for="modal-email">Votre adresse email</label>
-                  <input type="email" id="modal-email" name="email" placeholder="Ex : marie@email.fr" required />
-                </div>
-
-                <button type="submit" class="btn-submit" id="modal-submit-btn">
-                  <span id="modal-btn-text">Envoyer ma checklist</span>
-                  <span id="modal-btn-loading" style="display:none">Envoi en cours...</span>
-                </button>
-              </form>
-            </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="ci-icon">📞</div>
+          <div>
+            <strong>Téléphone</strong>
+            <span>36 46 (service gratuit)</span>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="ci-icon">🕐</div>
+          <div>
+            <strong>Horaires</strong>
+            <span>Lun–Ven, 8h–18h</span>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- ═══════════════════════════════════════════
-         FAQ
-    ═══════════════════════════════════════════ -->
-    <section id="faq" class="section">
-      <div class="container">
-        <div class="section-header reveal">
-          <div class="section-tag">Questions fréquentes</div>
-          <h2>Vous avez des questions ?<br><em>Nous avons les réponses.</em></h2>
-        </div>
-
-        <div class="faq-grid" id="faq-container"></div>
+      <div class="contact-secure">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="currentColor"/></svg>
+        Vos données sont chiffrées et protégées — conformité RGPD
       </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════
-         CTA FINAL
-    ═══════════════════════════════════════════ -->
-    <section class="section cta-section">
-      <div class="cta-bg">
-        <div class="hero-orb hero-orb-1"></div>
-        <div class="hero-orb hero-orb-3"></div>
-      </div>
-      <div class="container cta-inner reveal">
-        <div class="section-tag tag-white">Rejoignez 67M d'assurés</div>
-        <h2>Prêt à simplifier<br>votre accès à la santé ?</h2>
-        <p>Créez votre compte en 2 minutes et découvrez un nouveau mode de relation avec votre Assurance Maladie.</p>
-        <div class="cta-btns">
-          <a href="#contact" class="btn-cta-white">Créer mon compte gratuit →</a>
-          <a href="#services" class="btn-cta-ghost">En savoir plus</a>
-        </div>
-        <div class="cta-reassure">
-          <span>✓ Gratuit et sans engagement</span>
-          <span>✓ Disponible 24h/24</span>
-          <span>✓ Sécurisé RGPD</span>
-        </div>
-      </div>
-    </section>
+    </div>
+  </div>
+</section>
 
   </main>
 
@@ -618,12 +552,18 @@
 
       <form id="email-form" novalidate>
         <div class="form-group">
-          <label for="modal-nom">Votre prénom et nom</label>
-          <input type="text" id="modal-nom" name="nom" placeholder="Ex : Marie Dupont" required autocomplete="name" />
+          <label for="modal-prenom">Votre prénom</label>
+          <input type="text" id="modal-prenom" name="prenom" placeholder="Ex : Marie" required />
         </div>
+
+        <div class="form-group">
+          <label for="modal-nom">Votre nom</label>
+          <input type="text" id="modal-nom" name="nom" placeholder="Ex : Dupont" required />
+        </div>
+
         <div class="form-group">
           <label for="modal-email">Votre adresse email</label>
-          <input type="email" id="modal-email" name="email" placeholder="Ex : marie@email.fr" required autocomplete="email" />
+          <input type="email" id="modal-email" name="email" placeholder="Ex : marie@email.fr" required />
         </div>
 
         <button type="submit" class="btn-submit" id="modal-submit-btn">
@@ -636,13 +576,6 @@
             Envoi en cours...
           </span>
         </button>
-
-        <div id="modal-success" class="form-alert form-success" style="display:none">
-          ✅ Checklist envoyée ! Vérifiez votre boîte mail (et vos spams si besoin).
-        </div>
-        <div id="modal-error" class="form-alert form-error" style="display:none">
-          ❌ Une erreur s'est produite. Veuillez réessayer.
-        </div>
       </form>
 
       <p class="modal-rgpd">

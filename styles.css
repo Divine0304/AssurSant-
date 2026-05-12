@@ -902,6 +902,22 @@ ul { list-style: none; }
   border: 1px solid #bbf7d0;
 }
 
+/* Centre le contenu de la section contact quand il est seul */
+.contact-single-column {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Aligne les icônes de contact à gauche même si le bloc est centré */
+.contact-infos {
+  text-align: left;
+  margin-top: 30px;
+}
+
 .form-card {
   background: white;
   border-radius: var(--radius-lg);

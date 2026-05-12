@@ -266,6 +266,7 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
   this.reset();
 
   setTimeout(() => {
+    
     successEl.style.display = 'none';
     submitBtn.disabled = false;
   }, 5000);

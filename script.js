@@ -178,77 +178,50 @@ document.addEventListener('keydown', (e) => {
 document.getElementById('email-form').addEventListener('submit', async function(e) {
   e.preventDefault();
 
-  const nom   = document.getElementById('modal-nom').value.trim();
+  // Récupération des valeurs
+  const nom = document.getElementById('modal-nom').value.trim();
+  const prenom = document.getElementById('modal-prenom').value.trim();
   const email = document.getElementById('modal-email').value.trim();
 
-  if (!nom || !email) return;
+  if (!nom || !prenom || !email) return;
 
-  const btnText    = document.getElementById('modal-btn-text');
+  const btnText = document.getElementById('modal-btn-text');
   const btnLoading = document.getElementById('modal-btn-loading');
-  const submitBtn  = document.getElementById('modal-submit-btn');
-  const successEl  = document.getElementById('modal-success');
-  const errorEl    = document.getElementById('modal-error');
+  const submitBtn = document.getElementById('modal-submit-btn');
 
-  // Reset messages
-  successEl.style.display = 'none';
-  errorEl.style.display   = 'none';
-
-  // État chargement
-  btnText.style.display    = 'none';
+  // État de chargement
+  btnText.style.display = 'none';
   btnLoading.style.display = 'flex';
-  submitBtn.disabled       = true;
+  submitBtn.disabled = true;
 
-  // ─── Construction du payload ──────────────
-  // On envoie toutes les données de la checklist.
-  // Make les utilisera pour construire l'email HTML côté serveur.
-  const tasksCompleted = checklistData.filter(item => checkedSet.has(item.id));
-  const tasksPending   = checklistData.filter(item => !checkedSet.has(item.id));
-
+  // Création du payload avec uniquement nom, prénom et email
   const payload = {
-    nom,
-    email,
-    date:  new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
-    stats: {
-      total:     checklistData.length,
-      completed: checkedSet.size,
-      pending:   checklistData.length - checkedSet.size,
-      percent:   Math.round((checkedSet.size / checklistData.length) * 100)
-    },
-    // Tâches complétées (cochées ✅)
-    tasks_completed: tasksCompleted.map(item => ({
-      id:    item.id,
-      title: item.title,
-      desc:  item.desc
-    })),
-    // Tâches restantes (non cochées)
-    tasks_pending: tasksPending.map(item => ({
-      id:    item.id,
-      title: item.title,
-      desc:  item.desc
-    }))
+    nom: nom,
+    prenom: prenom,
+    email: email,
+    date: new Date().toLocaleDateString('fr-FR')
   };
 
   try {
     const response = await fetch(WEBHOOK_URL, {
-      method:  'POST',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload)
+      body: JSON.stringify(payload)
     });
 
     if (response.ok) {
-      successEl.style.display = 'block';
+      document.getElementById('modal-success').style.display = 'block';
       this.reset();
-      // Fermeture automatique après 4 secondes
-      setTimeout(closeModal, 4000);
+      setTimeout(closeModal, 3000);
     } else {
-      throw new Error('Erreur serveur');
+      throw new Error('Erreur');
     }
   } catch (err) {
-    errorEl.style.display = 'block';
+    document.getElementById('modal-error').style.display = 'block';
   } finally {
-    btnText.style.display    = 'flex';
+    btnText.style.display = 'flex';
     btnLoading.style.display = 'none';
-    submitBtn.disabled       = false;
+    submitBtn.disabled = false;
   }
 });
 

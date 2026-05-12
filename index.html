@@ -481,37 +481,26 @@
 
           <div class="contact-right reveal reveal-delay-1">
             <div class="form-card">
-              <form id="contactForm" novalidate>
+              <form id="email-form" novalidate>
                 <div class="form-group">
-                  <label for="nom">Votre nom</label>
-                  <input type="text" id="nom" name="nom" placeholder="Ex : Marie Dupont" required autocomplete="name" />
+                  <label for="modal-nom">Votre nom</label>
+                  <input type="text" id="modal-nom" name="nom" placeholder="Ex : Dupont" required />
                 </div>
+                
                 <div class="form-group">
-                  <label for="email">Votre email</label>
-                  <input type="email" id="email" name="email" placeholder="Ex : marie@email.fr" required autocomplete="email" />
-                </div>
-                <div class="form-group">
-                  <label for="message">Votre message</label>
-                  <textarea id="message" name="message" rows="5" placeholder="Décrivez votre demande ou question..." required></textarea>
+                  <label for="modal-prenom">Votre prénom</label>
+                  <input type="text" id="modal-prenom" name="prenom" placeholder="Ex : Marie" required />
                 </div>
 
-                <button type="submit" class="btn-submit" id="submitBtn">
-                  <span id="btn-text">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    Envoyer le message
-                  </span>
-                  <span id="btn-loading" style="display:none">
-                    <svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                    Envoi en cours...
-                  </span>
+                <div class="form-group">
+                  <label for="modal-email">Votre adresse email</label>
+                  <input type="email" id="modal-email" name="email" placeholder="Ex : marie@email.fr" required />
+                </div>
+
+                <button type="submit" class="btn-submit" id="modal-submit-btn">
+                  <span id="modal-btn-text">Envoyer ma checklist</span>
+                  <span id="modal-btn-loading" style="display:none">Envoi en cours...</span>
                 </button>
-
-                <div id="form-success" class="form-alert form-success" style="display:none">
-                  ✅ Message envoyé ! Vérifiez votre boîte mail pour la confirmation automatique.
-                </div>
-                <div id="form-error" class="form-alert form-error" style="display:none">
-                  ❌ Erreur lors de l'envoi. Veuillez réessayer.
-                </div>
               </form>
             </div>
           </div>

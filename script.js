@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════
 // WEBHOOK URL — Make.com
 // ═══════════════════════════════════════════
-const WEBHOOK_URL = 'https://hook.eu1.make.com/q4rs6s6z5iq5ly2x2frryjoq7j6039o7';
+const WEBHOOK_URL = 'https://hook.eu1.make.com/omco45r8imy8yt7547f8hl9f1yjrq9h6';
 
 // ═══════════════════════════════════════════
 // HEADER SCROLL

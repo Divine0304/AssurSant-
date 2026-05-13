@@ -167,72 +167,80 @@ document.addEventListener('keydown', (e) => {
 // ═══════════════════════════════════════════
 // ENVOI CHECKLIST → WEBHOOK MAKE
 // ═══════════════════════════════════════════
-document.getElementById('email-form').addEventListener('submit', async function (e) {
-  e.preventDefault();
+// Attendre que le HTML soit chargé avant de chercher les éléments
+document.addEventListener('DOMContentLoaded', () => {
 
-  const formContainer = document.getElementById('modal-form-container');
-  const successEl     = document.getElementById('modal-success');
-  const errorEl       = document.getElementById('modal-error');
-  const submitBtn     = document.getElementById('modal-submit-btn');
-  const btnText       = document.getElementById('modal-btn-text');
-  const btnLoading    = document.getElementById('modal-btn-loading');
+    const emailForm = document.getElementById('email-form');
 
-  const prenom = document.getElementById('modal-prenom').value.trim();
-  const nom    = document.getElementById('modal-nom').value.trim();
-  const email  = document.getElementById('modal-email').value.trim();
+    if (emailForm) {
+        emailForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-  if (!prenom || !nom || !email) return;
+            const formContainer = document.getElementById('modal-form-container');
+            const successEl     = document.getElementById('modal-success');
+            const errorEl       = document.getElementById('modal-error');
+            const submitBtn     = document.getElementById('modal-submit-btn');
+            const btnText       = document.getElementById('modal-btn-text');
+            const btnLoading    = document.getElementById('modal-btn-loading');
 
-  // État chargement
-  errorEl.style.display    = 'none';
-  btnText.style.display    = 'none';
-  btnLoading.style.display = 'flex';
-  submitBtn.disabled       = true;
+            const prenom = document.getElementById('modal-prenom').value.trim();
+            const nom    = document.getElementById('modal-nom').value.trim();
+            const email  = document.getElementById('modal-email').value.trim();
 
-  // Payload complet envoyé à Make
-  const payload = {
-    prenom,
-    nom,
-    email,
-    date: new Date().toLocaleDateString('fr-FR', {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    }),
-    stats: {
-      total:     checklistData.length,
-      completed: checkedSet.size,
-      pending:   checklistData.length - checkedSet.size,
-      percent:   Math.round((checkedSet.size / checklistData.length) * 100)
-    },
-    tasks: checklistData.map(item => ({
-      id:        item.id,
-      title:     item.title,
-      desc:      item.desc,
-      completed: checkedSet.has(item.id)
-    }))
-  };
+            if (!prenom || !nom || !email) return;
 
-  try {
-    const response = await fetch(WEBHOOK_URL, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload)
-    });
+            // État chargement
+            errorEl.style.display    = 'none';
+            btnText.style.display    = 'none';
+            btnLoading.style.display = 'flex';
+            submitBtn.disabled       = true;
 
-    if (response.ok) {
-      formContainer.style.display = 'none';
-      successEl.style.display     = 'block';
-      setTimeout(closeModal, 4000);
-    } else {
-      throw new Error(`Erreur serveur : ${response.status}`);
+            // ... reste de votre code de payload et fetch ...
+            const payload = {
+            prenom,
+            nom,
+            email,
+            date: new Date().toLocaleDateString('fr-FR', {
+              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            }),
+            stats: {
+              total:     checklistData.length,
+              completed: checkedSet.size,
+              pending:   checklistData.length - checkedSet.size,
+              percent:   Math.round((checkedSet.size / checklistData.length) * 100)
+            },
+            tasks: checklistData.map(item => ({
+              id:        item.id,
+              title:     item.title,
+              desc:      item.desc,
+              completed: checkedSet.has(item.id)
+            }))
+          };
+            
+          try {
+          const response = await fetch(WEBHOOK_URL, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(payload)
+          });
+
+          if (response.ok) {
+            formContainer.style.display = 'none';
+            successEl.style.display     = 'block';
+            setTimeout(closeModal, 4000);
+          } else {
+            throw new Error(`Erreur serveur : ${response.status}`);
+          }
+          } catch (err) {
+            console.error('Erreur webhook :', err);
+            errorEl.style.display = 'block';
+          } finally {
+            btnText.style.display    = 'flex';
+            btnLoading.style.display = 'none';
+            submitBtn.disabled       = false;
+          }
+        });
     }
-  } catch (err) {
-    console.error('Erreur webhook :', err);
-    errorEl.style.display = 'block';
-  } finally {
-    btnText.style.display    = 'flex';
-    btnLoading.style.display = 'none';
-    submitBtn.disabled       = false;
-  }
 });
 
 // ═══════════════════════════════════════════
